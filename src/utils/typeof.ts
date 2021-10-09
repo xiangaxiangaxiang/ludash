@@ -4,18 +4,21 @@ function toString(value: any): string {
     return Object.prototype.toString.call(value)
 }
 
+// 是否空数组
 export function isEmptyObject(value: any): boolean {
     if (!isPlainObject(value)) {
         return false
     }
-    return !!Object.keys(value).length
+    return !Object.keys(value).length
 }
 
-export function isObjectLike(value: any): value is object {
+// 是否对象（包括数组等）
+export function isObjectLike(value: any) {
     return !isNull(value) && typeof value === 'object'
 }
 
-export function isPlainObject(value: any): value is object {
+// 是否纯对象，不包含数组等
+export function isPlainObject(value: any) {
     if (!isObjectLike(value) || getType(value) !== 'object') {
         return false
     }
@@ -29,7 +32,28 @@ export function isPlainObject(value: any): value is object {
     return proto === Object.getPrototypeOf(value)
 }
 
+// 是否数组，直接使用Array对象的isArray
 export const isArray = Array.isArray
+
+// 是否错误对象
+export function isError(value: any): value is Error {
+    if (!isObjectLike(value)) {
+        return false
+    }
+    const type = getType(value)
+    return (
+        type == 'error' ||
+        type == 'domexception' ||
+        (typeof value.message === 'string' &&
+            typeof value.name === 'string' &&
+            !isPlainObject(value))
+    )
+}
+
+// 是否函数
+export function isFunction(value: any): value is Function {
+    return getType(value) === 'function'
+}
 
 export function isNull(value: any): value is null {
     return toString(value) === '[object Null]'

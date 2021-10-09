@@ -1,1 +1,5 @@
-describe('add', () => {})
+describe('add', () => {
+    test('test', () => {
+        expect(1).toBe(1)
+    })
+})
